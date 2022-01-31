@@ -1,0 +1,24 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fibbl-docs/docs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fibbl-docs/docs/issues"
+  },
+  "homepage": "https://github.com/fibbl-docs/docs#readme",
+  "devDependencies": {
+    "vuepress": "^1.9.5"
+  }
+}

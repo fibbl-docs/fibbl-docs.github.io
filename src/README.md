@@ -1,8 +1,9 @@
 # Custom Elements API
 
 This document describes all the custom HTML elements provided by Fibbl to its clients. The elements are supposed to be
-used on any third party webpage. You can quickly try out all the code examples on [https://jsfiddle.net/](https://jsfiddle.net/) or any similar
-website.
+used on any third party webpage. You can quickly try out all the code examples
+on [https://jsfiddle.net/](https://jsfiddle.net/) or any similar website (but you will have to add `token` and `secret`,
+read further for more details).
 
 All elements are used the same way:
 
@@ -15,11 +16,44 @@ All elements are used the same way:
    It can be especially handy when you use an element with custom markup (like the `fibbl-bar`). Before a script is
    loaded, that markup is shown with default styles, and the rule above hides it until a custom element is defined.
 
-3. Use the element as any other HTML element - you can add styles, classes, event handlers and other valid html
+3. Some elements include others, e.g. `fibbl-bar` includes `model-viewer`, `carousel` and `qr-code`, so you don't need
+   to include them separately, if you use `fibbl-bar`.
+
+4. Use the element as any other HTML element - you can add styles, classes, event handlers and other valid html
    attributes to it. But do not forget that custom elements cannot be self-closed, that is, instead
    of `<fibbl-element />` you should always write `<fibbl-element></fibbl-element>`.
 
-Read further for more details and examples.
+## Adding `token` and `secret` for development
+
+With no additional configuration scripts are allowed to fetch product data only from the company website. If a request
+is made from a different origin, it will be blocked by the back-end, and you will get an error.
+
+To enable scripts on localhost (or any other domain), you should add the following configuration:
+
+```html
+<script
+    src="https://cdn.fibbl.com/fibbl-model-viewer.js" type="module"
+    data-fibbl-config
+    data-token="token_given_by_Fibbl"
+    data-secret="secret_given_by_Fibbl"
+></script>
+<script src="https://cdn.fibbl.com/fibbl-carousel.js" type="module"></script>
+<!-- any other scripts, the config should be only in the first one -->
+```
+
+The configuration must comply with the following rules:
+
+1. It must be provided in the first `script` tag used to include a Fibbl script.
+2. If you use several scripts it must be added only to the first one.
+3. It has to contain `data-fibbl-config` attribute with no value as a unique mark of the single source of global config.
+4. It may contain other `data-` attributes with the payload, currently only `data-secret` and `data-token`.
+
+The `secret` and `token` should be sent to you by Fibbl managers.
+
+You must **NEVER** use `token` and `secret` in production on a publicly available website. They are to be used **only
+for development** or on the back-end.
+
+In all subsequent code examples we don't use `token` and `secret` as it must be on a production website.
 
 ## fibbl-model-viewer
 
@@ -89,7 +123,6 @@ A complex element. It must be provided with buttons as children. Each button cor
 , `carousel` or `qr-code`, which are rendered inside a user provided container or in a pop-up.
 
 ```html
-
 <script src="https://cdn.fibbl.com/fibbl-bar.js" type="module"></script>
 <style>
     :not(:defined) {
@@ -195,7 +228,7 @@ provide elements with explicit `width` and `height`**. How you do it is up to yo
 However, there are some pitfalls. E.g. you can scale your element via flex inside a container with `min-height` value
 and no explicit `height`. In this case the element itself will take some space, but its content won't be visible (
 because it will be of 0 size). If possible provide the element with explicit sizes or
-you `display: grid; grid-template: 1fr / 1fr;` as an escape hatch. Inside a grid inner elements will take all space.
+use `display: grid; grid-template: 1fr / 1fr;` as an escape hatch. Inside a grid inner elements will take all space.
 However, explicit sizes are preferable.
 
 As for other properties like `border`, `background`, `margin`, `width`, `height` etc., which cannot affect inner layout,
@@ -203,7 +236,7 @@ you can change them as you want.
 
 ### Client's markup
 
-In case of elements which accepts children elements, e.g. `fibbl-bar` with buttons, the default styles for the buttons
+In case of elements which accept children elements, e.g. `fibbl-bar` with buttons, the default styles for the buttons
 are provided, but in most cases they will have to be changed. In this case it's better to always reset the styles
 completely, if you want to customize your own markup, e.g.:
 

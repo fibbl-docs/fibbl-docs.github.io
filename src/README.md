@@ -55,6 +55,16 @@ for development** or on the back-end.
 
 In all subsequent code examples we don't use `token` and `secret` as it must be on a production website.
 
+## Shared behavior
+
+All Fibbl components work in the following way:
+
+1. Initially a component renders itself completely transparent.
+2. Then it checks availability of the product with the provided product id.
+3. If the product is available, the component makes itself visible.
+4. If not, the component hides itself. Currently, it's hidden with `display: none`, that is, not removed from the DOM.
+   But this way of hiding can be changed in the future, so you must rely on it (e.g. using CSS sibling selectors).
+
 ## fibbl-model-viewer
 
 An element to display a 3D model of product in a special viewer.
@@ -119,8 +129,9 @@ Supported custom attributes:
 
 ## fibbl-bar
 
-A complex element. It must be provided with buttons as children. Each button corresponds to either `model-viewer`
-, `carousel` or `qr-code`, which are rendered inside a user provided container or in a pop-up.
+A complex element. It must be provided with buttons as children (by a button we imply any element with `data-element`
+attribute). Each button corresponds to either `model-viewer`, `carousel` or `qr-code`, which are rendered inside a user
+provided container or in a pop-up.
 
 ```html
 <script src="https://cdn.fibbl.com/fibbl-bar.js" type="module"></script>
@@ -162,8 +173,9 @@ A complex element. It must be provided with buttons as children. Each button cor
 ```
 
 Initially, the bar hides all the buttons. Then it makes a request to the Fibbl's databases and analyzes what options are
-enabled for the product with the provided `product-id`. Then only buttons corresponding to the enabled options are
-shown.
+enabled for the product with the provided `product-id` (e.g. `3D model` can be enabled, but `Virtual Try On` disabled or
+not supported by the product at all). Then only buttons corresponding to the enabled options are shown, all others are
+hidden.
 
 Each button should be provided with the `data-element` attribute, which is either a name of a Fibbl element or `default`
 . All other `data-` attributes are passed to the corresponding element, when it's created, so you can configure elements
@@ -190,6 +202,36 @@ CSS classes:
   shown. It's provided to allow users to override standard bar's styles.
 - `.fibbl-bar-content` - a class of the component which is inserted into client defined container. Using this class you
   can style the element. Usually only `height` and `width` required.
+
+### Advanced usage of `fibbl-bar`
+
+If you want to use the `fibbl-bar` to create a fancy menu with significant customizations, first of all, you should
+**consider implementing it from scratch without `fibbl-bar` at all**, using standalone components. It will give you
+more freedom.
+
+If you still want to use the `fibbl-bar` (the only probable reason to use it is that it hides buttons for unsupported
+features), here is a list of what you can do with it (also read about the styles reset in the next section):
+1. The component listens for clicks on itself not on buttons inside. Also, it traverses the event path looking for an
+   element with the `data-element` attribute. It means that you can use something like this
+   ```html
+   <div data-element="fibbl-model-viewer">
+      <img src="https://icon_url" alt="button icon" />
+      <span>3D model</span>
+   </div>
+   ```
+   as a button, and if a user clicks on the `img` icon, the click still will be processed correctly, because it has a
+   parent with `data-element` attribute.
+2. The bar hides unsupported buttons using a global style. But it's applied only if there is at least one unsupported
+   button inside, when the bar is added to the DOM. Again, you must not rely on the presence of hidden buttons in the
+   DOM - the way of hiding can be changed in the future (e.g. don't use CSS sibling selectors).
+3. Given the first two points, you can change the markup dynamically inside the bar - it will handle clicks on new
+   markup correctly and still will hide unsupported buttons even if you inject them anew.
+4. Correspondingly if you stop a click propagation, the bar will not react.
+5. The bar requires you to initially provide at least 1 button for a supported feature. If there are no buttons for
+   supported features, the bar will hide itself completely as any other Fibbl component.
+6. You can nest `[data-element]` buttons as you wish, that is, it's allowed using wrappers around your buttons.
+7. But note that the bar will hide only `[data-element]`s, not wrappers around them. So probably you will want to add
+   `data-element` attribute to the first wrapper and in most cases it will be a direct child of the bar component.
 
 ## Element styles
 
@@ -247,7 +289,7 @@ fibbl-bar {
     /* your rules here */
 }
 
-fibbl-bar > button {
+fibbl-bar [data-element] {
     all: revert; /* reset all the styles */
     /* your rules here */
 }
@@ -262,4 +304,9 @@ future.
 
 Right now all elements don't support dynamic attribute changes. That is once an element is attached to the DOM the first
 time, its attributes must not be changed - it will not react. If you need to change attributes, recreate an element. In
-frameworks like React you should provide a new `key` to an element each time you need to update it. 
+frameworks like React you should provide a new `key` to an element each time you need to update it.
+
+## API limitations
+
+If you find the current API not enough to implement what you want, please, don't try to bypass the limitations - ask
+Fibbl managers to enhance it. Otherwise, after an API update your workarounds can be broken.

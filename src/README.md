@@ -203,6 +203,14 @@ CSS classes:
 - `.fibbl-bar-content` - a class of the component which is inserted into client defined container. Using this class you
   can style the element. Usually only `height` and `width` required.
 
+Custom Events:
+
+- `fibbl-bar-content-change` - [CustomEvent][1] with `{detail: {button: HTMLElement}}`, where `button` is the clicked
+  HTML element with `data-element` attribute. Currently, the event is fired only when the bar has a container and the
+  content has been updated after the click. The event may be useful on mobile devices, where a click on "Augmented
+  Reality" or "Virtual Try On" buttons doesn't cause the content change, but the AR or VTO are launched at once and the
+  event isn't fired.
+
 ### Advanced usage of `fibbl-bar`
 
 If you want to use the `fibbl-bar` to create a fancy menu with significant customizations, first of all, you should
@@ -310,3 +318,5 @@ frameworks like React you should provide a new `key` to an element each time you
 
 If you find the current API not enough to implement what you want, please, don't try to bypass the limitations - ask
 Fibbl managers to enhance it. Otherwise, after an API update your workarounds can be broken.
+
+[1]: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent

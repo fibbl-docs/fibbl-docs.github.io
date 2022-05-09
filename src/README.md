@@ -23,17 +23,17 @@ All elements are used the same way:
    attributes to it. But do not forget that custom elements cannot be self-closed, that is, instead
    of `<fibbl-element />` you should always write `<fibbl-element></fibbl-element>`.
 
-## Adding `token` and `secret` for development
+## Global configuration
 
-With no additional configuration scripts are allowed to fetch product data only from the company website. If a request
-is made from a different origin, it will be blocked by the back-end, and you will get an error.
-
-To enable scripts on localhost (or any other domain), you should add the following configuration:
+The scripts can be provided with a global configuration. It can be used for Google Analytics and local developpment. For
+example:
 
 ```html
 <script
     src="https://cdn.fibbl.com/fibbl-model-viewer.js" type="module"
     data-fibbl-config
+    data-analytics-type="google"
+    data-analytics-id="G-ABCABCABC"
     data-token="token_given_by_Fibbl"
     data-secret="secret_given_by_Fibbl"
 ></script>
@@ -46,7 +46,33 @@ The configuration must comply with the following rules:
 1. It must be provided in the first `script` tag used to include a Fibbl script.
 2. If you use several scripts it must be added only to the first one.
 3. It has to contain `data-fibbl-config` attribute with no value as a unique mark of the single source of global config.
-4. It may contain other `data-` attributes with the payload, currently only `data-secret` and `data-token`.
+4. It may contain other `data-` attributes with the payload.
+
+### Google Analytics
+
+To make the scripts send event to your Google Analytics account, you should add 2 properties to the global config:
+
+```
+data-analytics-type="google"
+data-analytics-id="G-ABCABCABC"
+```
+
+The `analytics-type` should be `google` and the `analytics-id` should be a Google Analytics id like `G-ABCABCABC`. Note
+that a Google Analytics id is required, not the id of the Tag Manager (which starts with `GTM-`). Also, you have to add
+GoogleAnalytics or Tag Manger script on your page. If you use the Tag Manager, you also may need to add a Google
+Analytics GA4 tag into it with the same GA4 id you pass to the scripts.
+
+### `token` and `secret` for local development
+
+With no additional configuration scripts are allowed to fetch product data only from the company website. If a request
+is made from a different origin, it will be blocked by the back-end, and you will get an error.
+
+To enable scripts on localhost (or any other domain), you should add `secret` and `token` to the global configuration:
+
+```
+data-token="token_given_by_Fibbl"
+data-secret="secret_given_by_Fibbl"
+```
 
 The `secret` and `token` should be sent to you by Fibbl managers.
 

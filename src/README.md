@@ -1,5 +1,9 @@
 # Custom Elements API
 
+> This document is mostly for developers. If you are not one of them it may be easier for you to read (and copy code
+> from)
+> the [Fibbl Notion documentation](https://fibbl.notion.site/Fibbl-Help-Center-cd3d0bccffbe42ee90509ef5943881e4)
+
 This document describes all the custom HTML elements provided by Fibbl to its clients. The elements are supposed to be
 used on any third party webpage. You can quickly try out all the code examples
 on [https://jsfiddle.net/](https://jsfiddle.net/) or any similar website (but you will have to add `token` and `secret`,
@@ -25,13 +29,14 @@ All elements are used the same way:
 
 ## Global configuration
 
-The scripts can be provided with a global configuration. It can be used for Google Analytics and local developpment. For
-example:
+The scripts can be provided with a global configuration. It can be used to configure Google Analytics, locale and for
+local development. For example:
 
 ```html
 <script
     src="https://cdn.fibbl.com/fibbl-model-viewer.js" type="module"
     data-fibbl-config
+    data-locale="ru-RU"
     data-analytics-type="google"
     data-analytics-id="G-ABCABCABC"
     data-token="token_given_by_Fibbl"
@@ -47,6 +52,25 @@ The configuration must comply with the following rules:
 2. If you use several scripts it must be added only to the first one.
 3. It has to contain `data-fibbl-config` attribute with no value as a unique mark of the single source of global config.
 4. It may contain other `data-` attributes with the payload.
+
+### Locale
+
+By default, Fibbl components use the English language. If you want to change that, you should add a locale code:
+
+```
+data-locale="ru-RU"
+```
+
+The code is a [5-character IETF BCP 47 language tag](https://en.wikipedia.org/wiki/IETF_language_tag), consisting of
+[2-letter ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes), a dash `-`, and a
+[2-letter ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1). Use the links to find codes for
+your language and country.
+
+Examples of locale codes: `ru-RU`, `fi-FI`, `et-EE`, `lv-LV`, `lt-LT` etc.
+
+If there is no country-specific version of a language in the components, a default version for that language will be
+used. For example, right now `ru-RU` and `ru-LV` are completely the same. If a language isn't supported at all, the
+default locale will be used.
 
 ### Google Analytics
 

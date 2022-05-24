@@ -36,7 +36,7 @@ local development. For example:
 <script
     src="https://cdn.fibbl.com/fibbl-model-viewer.js" type="module"
     data-fibbl-config
-    data-locale="ru-RU"
+    data-locale="sv-SE"
     data-analytics-type="google"
     data-analytics-id="G-ABCABCABC"
     data-token="token_given_by_Fibbl"
@@ -58,15 +58,15 @@ The configuration must comply with the following rules:
 By default, Fibbl components use the English language. If you want to change that, you should add a locale code:
 
 ```
-data-locale="ru-RU"
+data-locale="sv-SE"
 ```
 
-The code is a [5-character IETF BCP 47 language tag](https://en.wikipedia.org/wiki/IETF_language_tag), consisting of
+The code is a **5-character IETF BCP 47 language tag**, consisting of
 [2-letter ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes), a dash `-`, and a
-[2-letter ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1). Use the links to find codes for
-your language and country.
+[2-letter ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1) (conventionally written in
+upper case), so Swedish in Sweden is `sv-SE`. Use the links to find codes for your language and country.
 
-Examples of locale codes: `ru-RU`, `fi-FI`, `et-EE`, `lv-LV`, `lt-LT` etc.
+More examples of locale codes: `ru-RU`, `fi-FI`, `et-EE`, `lv-LV`, `lt-LT` etc.
 
 If there is no country-specific version of a language in the components, a default version for that language will be
 used. For example, right now `ru-RU` and `ru-LV` are completely the same. If a language isn't supported at all, the
